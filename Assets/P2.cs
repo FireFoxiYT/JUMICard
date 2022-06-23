@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Movement : MonoBehaviour {
+public class P2 : MonoBehaviour {
 
     public WheelCollider WheelFL;
     public WheelCollider WheelFR;
@@ -12,9 +12,11 @@ public class Movement : MonoBehaviour {
     public Transform WheelRLtrans;
     public Transform WheelRRtrans;
     public Vector3 eulertest;
-    float maxFwdSpeed = -3000;
-    float maxBwdSpeed = 1000f;
-    float gravity = 9.8f;
+    public float maxFwdSpeed = -3000;
+    public float maxBwdSpeed = 1000f;
+    public float gravity = 9.8f;
+    float inputHorizontal;
+    float inputVertical;
     private bool braked = false;
     private float maxBrakeTorque = 500;
     private Rigidbody rb;
@@ -35,16 +37,17 @@ public class Movement : MonoBehaviour {
         }
         //speed of car, Car will move as you will provide the input to it.
    
-      WheelRR.motorTorque = maxTorque * Input.GetAxis("Vertical");
-        WheelRL.motorTorque = maxTorque * Input.GetAxis("Vertical");
+        WheelRR.motorTorque = -maxTorque * inputVertical;
+        WheelRL.motorTorque = -maxTorque * inputVertical;
       
         //changing car direction
         //Here we are changing the steer angle of the front tyres of the car so that we can change the car direction.
-        WheelFL.steerAngle = 30 * (Input.GetAxis("Horizontal"));
-        WheelFR.steerAngle = 30 * Input.GetAxis("Horizontal");
+        WheelFL.steerAngle = 30 * (inputHorizontal);
+        WheelFR.steerAngle = 30 * inputHorizontal;
     }
     void Update()
     {
+        InputManager();
         HandBrake();
         
         //for tyre rotate
@@ -63,8 +66,8 @@ public class Movement : MonoBehaviour {
     }
     void HandBrake()
     {
-        //Debug.Log("brakes " + braked);
-        if(Input.GetButton("Jump"))
+        //P2
+        if(Input.GetKey(KeyCode.Minus))
         {
             braked = true;
         }
@@ -78,6 +81,35 @@ public class Movement : MonoBehaviour {
             WheelRR.brakeTorque = maxBrakeTorque * 20;//0000;
             WheelRL.motorTorque = 0;
             WheelRR.motorTorque = 0;
+        }
+    }
+
+    void InputManager() 
+    {
+        if(Input.GetKey(KeyCode.UpArrow)) 
+        {
+            inputVertical = 1f;
+        }
+        if(Input.GetKey(KeyCode.LeftArrow)) 
+        {
+            inputHorizontal = -1f;
+        }
+        if(Input.GetKey(KeyCode.DownArrow)) 
+        {
+            inputVertical = -1f;
+        }
+        if(Input.GetKey(KeyCode.RightArrow))
+        {
+            inputHorizontal = 1f;
+        }
+
+        if(!(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)))
+        {
+            inputVertical = 0f;
+        }
+        if(!(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)))
+        {
+            inputHorizontal = 0f;
         }
     }
 }
