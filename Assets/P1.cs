@@ -21,7 +21,7 @@ public class P1 : MonoBehaviour {
     private float maxBrakeTorque = 500;
     private Rigidbody rb;
     public Transform centreofmass;
-    private float maxTorque = 500;
+    private float maxTorque = 2000;
     void Start () 
     {
         rb = GetComponent<Rigidbody>();
